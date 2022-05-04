@@ -3,19 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
+using UnityEngine.Events;
 
 public class VideoClipManager : MonoBehaviour
 {
+    ComandoPlayer[] array;
     private enum State { Init, Preparing, Play, Pause, Stop };
     private State videoState = State.Init;
     private VideoPlayer videoPlayer;
     public Text debug;
+    public enum ActionPlayer { None, PlayPause, Stop, NextClip, PrevClip, VolumeUp, VolumeDown, VolumeMute };
+
 
     void Start()
     {
+        array = GetComponentsInChildren<ComandoPlayer>();
+        foreach (ComandoPlayer a in array)
+        {
+            a.evento.AddListener(takeInput);
+        }
         videoPlayer = GetComponent<VideoPlayer>();
     }
-
 
     void Update()
     {
@@ -45,13 +53,13 @@ public class VideoClipManager : MonoBehaviour
     }
 
 
-    public void takeInput(Telecomando.InputTelecomando input) 
+    public void takeInput(ActionPlayer input) 
     {
-        if (input == Telecomando.InputTelecomando.NextClip)
+        if (input == ActionPlayer.NextClip)
         {
             ChangeClip("VideoDue");
         } 
-        else if (input == Telecomando.InputTelecomando.PrevClip)
+        else if (input == ActionPlayer.PrevClip)
         {
             ChangeClip("VideoTerra");
         }
@@ -59,7 +67,7 @@ public class VideoClipManager : MonoBehaviour
         switch (videoState)
         {
             case State.Stop:
-                if (input == Telecomando.InputTelecomando.PlayPause)
+                if (input == ActionPlayer.PlayPause)
                 {
                     debug.text = "Click tasto 'A'";
                     ChangeState(State.Play);
@@ -67,12 +75,12 @@ public class VideoClipManager : MonoBehaviour
                 break;
 
             case State.Play:
-                if (input == Telecomando.InputTelecomando.PlayPause)
+                if (input == ActionPlayer.PlayPause)
                 {
                     debug.text = "Click tasto 'A'";
                     ChangeState(State.Pause);
                 }
-                else if (input == Telecomando.InputTelecomando.Stop)
+                else if (input == ActionPlayer.Stop)
                 {
                     debug.text = "Click tasto 'B'";
                     ChangeState(State.Stop);
@@ -81,12 +89,12 @@ public class VideoClipManager : MonoBehaviour
                 break;
 
             case State.Pause:
-                if (input == Telecomando.InputTelecomando.PlayPause)
+                if (input == ActionPlayer.PlayPause)
                 {
                     debug.text = "Click tasto 'A'";
                     ChangeState(State.Play);
                 }
-                else if (input == Telecomando.InputTelecomando.Stop)
+                else if (input == ActionPlayer.Stop)
                 {
                     debug.text = "Click tasto 'B'";
                     ChangeState(State.Stop);

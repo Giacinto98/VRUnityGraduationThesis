@@ -6,22 +6,20 @@ using UnityEngine.Video;
 
 public class Telecomando : MonoBehaviour
 {
+    public OVRInput.Button inputId;
     private OVRGrabbable grabbable;
     public GameObject RHand;
     public GameObject LHand;
     private LineRenderer raggio;
-    public enum InputTelecomando {None, PlayPause, Stop, NextClip, PrevClip, VolumeUp, VolumeDown, VolumeMute};
-    void Start()
+     void Start()
     {
         grabbable = GetComponent<OVRGrabbable>(); //prendo le componenti relative allo script OVRGrabbale
         raggio = GetComponentInChildren<LineRenderer>();
     }
 
-    // Update is called once per frame s
+    // Update is called once per frame
     void Update()
-    {
-        VideoClipManager managerInput = null;
-       
+    {   
         if (grabbable) //se grabber ha delle componenti
         {
             if(raggio)
@@ -30,11 +28,13 @@ public class Telecomando : MonoBehaviour
             }
             if (grabbable.isGrabbed) //se ho in mano il telecomando
             {
+                ComandoPlayer comando = null;
                 RaycastHit hit;
-                if (Physics.Raycast(transform.position, transform.forward, out hit, 5f)) //ho avuto una collisione
+                if (Physics.Raycast(transform.position, transform.forward, out hit, 10f)) //ho avuto una collisione
                 {
-                    managerInput = hit.collider.GetComponent<VideoClipManager>();
+                   comando  = hit.collider.GetComponent<ComandoPlayer>();
                 }
+
                 OVRGrabber grabber = grabbable.grabbedBy; //componente che controlla le mani
                 OVRInput.Controller grabController = OVRInput.Controller.None;
                
@@ -46,32 +46,13 @@ public class Telecomando : MonoBehaviour
                 {
                     grabController = OVRInput.Controller.LTouch; //seleziono gli input su mano sinistra
                 }
-                bool play = OVRInput.GetDown(OVRInput.Button.One, grabController);
-                bool stop = OVRInput.GetDown(OVRInput.Button.Two, grabController);
-                bool nextClip = OVRInput.GetDown(OVRInput.Button.DpadRight, grabController);
-                bool prevClip = OVRInput.GetDown(OVRInput.Button.DpadLeft, grabController);
-                InputTelecomando inputCorrente = InputTelecomando.None;
 
-                if(play)
+                if(OVRInput.GetDown(inputId, grabController))
                 {
-                    inputCorrente = InputTelecomando.PlayPause;
-                } 
-                else if (stop)
-                {
-                    inputCorrente = InputTelecomando.Stop;
-                }
-                else if (nextClip)
-                {
-                    inputCorrente = InputTelecomando.NextClip;
-                }
-                else if (prevClip)
-                {
-                    inputCorrente = InputTelecomando.PrevClip;
-                }
-
-                if (managerInput)
-                {
-                    managerInput.takeInput(inputCorrente);
+                    if (comando)
+                    {
+                        comando.Execute();
+                    }
                 }
             }
         }
