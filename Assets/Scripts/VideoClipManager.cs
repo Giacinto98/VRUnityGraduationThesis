@@ -17,12 +17,12 @@ public class VideoClipManager : MonoBehaviour
 
     void Start()
     {
-        array = GetComponentsInChildren<ComandoPlayer>();
+        array = GetComponentsInChildren<ComandoPlayer>(); //mette in un array tutti i comandi ricevuti dal telecomando
         foreach (ComandoPlayer a in array)
         {
-            a.evento.AddListener(takeInput);
+            a.evento.AddListener(takeInput); //collego al comando l'evento che lancia metodo takeInput
         }
-        videoPlayer = GetComponent<VideoPlayer>();
+        videoPlayer = GetComponent<VideoPlayer>(); //prendo le componenti del videoPlayer
     }
 
     void Update()

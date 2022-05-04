@@ -14,15 +14,15 @@ public class Telecomando : MonoBehaviour
      void Start()
     {
         grabbable = GetComponent<OVRGrabbable>(); //prendo le componenti relative allo script OVRGrabbale
-        raggio = GetComponentInChildren<LineRenderer>();
+        raggio = GetComponentInChildren<LineRenderer>(); //prende le componenti del raggio rosso
     }
 
     // Update is called once per frame
     void Update()
     {   
-        if (grabbable) //se grabber ha delle componenti
+        if (grabbable) //se grabber non è null
         {
-            if(raggio)
+            if(raggio) //se il raggio non è null
             {
                 raggio.enabled = grabbable.isGrabbed; //attivo il raggio solo se l'oggetto è preso
             }
@@ -30,7 +30,7 @@ public class Telecomando : MonoBehaviour
             {
                 ComandoPlayer comando = null;
                 RaycastHit hit;
-                if (Physics.Raycast(transform.position, transform.forward, out hit, 10f)) //ho avuto una collisione
+                if (Physics.Raycast(transform.position, transform.forward, out hit, 10f)) //se rileva una collisione entro 10 metri, mette le informazione sulla collisione in un Raycast Object
                 {
                    comando  = hit.collider.GetComponent<ComandoPlayer>();
                 }
