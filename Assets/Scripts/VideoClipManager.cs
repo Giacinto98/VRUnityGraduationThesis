@@ -11,13 +11,12 @@ public class VideoClipManager : MonoBehaviour
     private enum State { Init, Preparing, Play, Pause, Stop };
     private State videoState = State.Init;
     private VideoPlayer videoPlayer;
-    public Text debug;
     public enum ActionPlayer { None, PlayPause, Stop, NextClip, PrevClip, VolumeUp, VolumeDown, VolumeMute };
 
 
     void Start()
     {
-        array = GetComponentsInChildren<ComandoPlayer>(); //mette in un array tutti i comandi ricevuti dal telecomando
+        array = transform.parent.GetComponentsInChildren<ComandoPlayer>(); //mette in un array tutti i comandi ricevuti dal telecomando
         foreach (ComandoPlayer a in array)
         {
             a.evento.AddListener(takeInput); //collego al comando l'evento che lancia metodo takeInput
@@ -44,10 +43,6 @@ public class VideoClipManager : MonoBehaviour
                 {
                     ChangeState(State.Play);
                 }
-                else
-                {
-                    debug.text = "In preparazione";
-                }
                 break;
         }
     }
@@ -69,7 +64,6 @@ public class VideoClipManager : MonoBehaviour
             case State.Stop:
                 if (input == ActionPlayer.PlayPause)
                 {
-                    debug.text = "Click tasto 'A'";
                     ChangeState(State.Play);
                 }
                 break;
@@ -77,12 +71,10 @@ public class VideoClipManager : MonoBehaviour
             case State.Play:
                 if (input == ActionPlayer.PlayPause)
                 {
-                    debug.text = "Click tasto 'A'";
                     ChangeState(State.Pause);
                 }
                 else if (input == ActionPlayer.Stop)
                 {
-                    debug.text = "Click tasto 'B'";
                     ChangeState(State.Stop);
                 }
 
@@ -91,12 +83,10 @@ public class VideoClipManager : MonoBehaviour
             case State.Pause:
                 if (input == ActionPlayer.PlayPause)
                 {
-                    debug.text = "Click tasto 'A'";
                     ChangeState(State.Play);
                 }
                 else if (input == ActionPlayer.Stop)
                 {
-                    debug.text = "Click tasto 'B'";
                     ChangeState(State.Stop);
                 }
                 break;
