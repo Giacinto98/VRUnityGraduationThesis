@@ -1,24 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Video;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using TMPro;
+using Newtonsoft.Json;
 
 public class JSONDownload : MonoBehaviour
 {
     //stringa che conterra l'url di richiesta
     [SerializeField] private string textURL; 
-    
+    private VideoPlayer videoPlayer;
     //classe che conterra i dati della stringa JSON 
     [System.Serializable]
-    public class Vods
+    public partial class Vods
     {
+        [JsonProperty("vods")]
         public List<Vod> video;
+
     }
 
     [System.Serializable]
-    public class Vod
+    public partial class Vod
     {
         public string name;
         public string urlS3;
@@ -26,7 +30,12 @@ public class JSONDownload : MonoBehaviour
         public int year;
         public string category;
     }
-    
+
+    void Start()
+    {
+        videoPlayer = GetComponent<VideoPlayer>();
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space)) //alla pressione del tasto spazio
@@ -47,22 +56,27 @@ public class JSONDownload : MonoBehaviour
     {
         //richiesta HTTP con metodo get
         UnityWebRequest request = UnityWebRequest.Get(textURL); 
-            //L'esecuzione viene riavviata a partire da quella posizione la volta successiva che viene chiamata la funzione iteratore.
-            yield return request.SendWebRequest(); 
-            //se si e verificato un errore nella richiesta HTTP 
-            if (request.isHttpError || request.isNetworkError) 
-            {
-                //Lo stampiamo in cosnole
-                Debug.LogError(request.error); 
-            }
-            else
-            {
-                //downloadHandler gestisce la response del seerver
-                var text = request.downloadHandler.text; 
-                Vods vods = JsonUtility.FromJson<Vods>(text); //converte il codice JSON in una classe FACT che abbiamo definito sopra
-                //stampa di prova da eliminiare
+        //L'esecuzione viene riavviata a partire da quella posizione la volta successiva che viene chiamata la funzione iteratore.
+        yield return request.SendWebRequest(); 
+        //se si e verificato un errore nella richiesta HTTP 
+        if (request.isHttpError || request.isNetworkError) 
+        {
+            //Lo stampiamo in cosnole
+            Debug.LogError(request.error); 
+        }
+        else
+        {
+            //downloadHandler gestisce la response del seerver
+            var text = request.downloadHandler.text;
+            Vods vods = JsonConvert.DeserializeObject<Vods>(text); //converte il codice JSON in una classe FACT che abbiamo definito sopra
+            //stampa di prova da eliminiare
+            if(vods != null) 
                 Debug.Log(vods.video[0].name);
-                //Capire come farlo visualizzare come testo
-            }
+            videoPlayer.url = vods.video[0].urlCDN;
+            videoPlayer.Play();
+            //Debug.Log("Sono qua");
+            //Debug.Log(vods.video[0].name);
+            //Capire come farlo visualizzare come testo
+        }
     }
 }

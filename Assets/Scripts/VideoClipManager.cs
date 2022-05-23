@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
 using UnityEngine.Events;
+using Newtonsoft.Json;
+using UnityEngine.Networking;
+using TMPro;
 
 public class VideoClipManager : MonoBehaviour
 {
@@ -11,8 +14,31 @@ public class VideoClipManager : MonoBehaviour
     private enum State { Init, Preparing, Play, Pause, Stop };
     private State videoState = State.Init;
     private VideoPlayer videoPlayer;
+    private int indiceArrayVideo = 0;
     public enum ActionPlayer { None, PlayPause, Stop, NextClip, PrevClip, VolumeUp, VolumeDown, VolumeMute };
+    
+    private Vods vods;
+    //stringa che conterra l'url di richiesta
+    [SerializeField] 
+    private string textURL;
+    //classe che conterra i dati della stringa JSON 
+    [System.Serializable]
+    public partial class Vods
+    {
+        [JsonProperty("vods")]
+        public List<Vod> video;
 
+    }
+
+    [System.Serializable]
+    public partial class Vod
+    {
+        public string name;
+        public string urlS3;
+        public string urlCDN;
+        public int year;
+        public string category;
+    }
 
     void Start()
     {
@@ -22,6 +48,7 @@ public class VideoClipManager : MonoBehaviour
             a.evento.AddListener(takeInput); //collego al comando l'evento che lancia metodo takeInput
         }
         videoPlayer = GetComponent<VideoPlayer>(); //prendo le componenti del videoPlayer
+        StartCoroutine(GetText());
     }
 
     void Update()
@@ -29,13 +56,6 @@ public class VideoClipManager : MonoBehaviour
         switch (videoState)
         {
             case State.Init:
-                if (videoPlayer)
-                {
-                    if (videoPlayer.clip)
-                    {
-                        ChangeState(State.Play);
-                    }
-                }
                 break;
 
             case State.Preparing:
@@ -45,6 +65,11 @@ public class VideoClipManager : MonoBehaviour
                 }
                 break;
         }
+
+        if (Input.GetKeyDown(KeyCode.Space)) //alla pressione del tasto spazio
+        {
+            takeInput(ActionPlayer.NextClip);
+        }
     }
 
 
@@ -52,11 +77,11 @@ public class VideoClipManager : MonoBehaviour
     {
         if (input == ActionPlayer.NextClip)
         {
-            ChangeClip("VideoDue");
+            ChangeClip(1);
         } 
         else if (input == ActionPlayer.PrevClip)
         {
-            ChangeClip("VideoTerra");
+            ChangeClip(-1);
         }
 
         switch (videoState)
@@ -94,9 +119,17 @@ public class VideoClipManager : MonoBehaviour
 
     }
 
-    void ChangeClip(string fileName)
+    void ChangeClip(int direction)
     {
-        videoPlayer.clip = (VideoClip)Resources.Load("Video/" + fileName);
+        indiceArrayVideo = (indiceArrayVideo + direction) % vods.video.Count;
+
+        
+
+        if(indiceArrayVideo < 0)
+        {
+            indiceArrayVideo = vods.video.Count - 1;
+        }
+        videoPlayer.url = vods.video[indiceArrayVideo].urlCDN;
         ChangeState(State.Preparing);
     }
 
@@ -118,5 +151,32 @@ public class VideoClipManager : MonoBehaviour
                 break;
         }
         videoState = stato;
+    }
+
+    private IEnumerator GetText()
+    {
+        //richiesta HTTP con metodo get
+        UnityWebRequest request = UnityWebRequest.Get(textURL); 
+        //L'esecuzione viene riavviata a partire da quella posizione la volta successiva che viene chiamata la funzione iteratore.
+        yield return request.SendWebRequest(); 
+        //se si e verificato un errore nella richiesta HTTP 
+        if (request.isHttpError || request.isNetworkError) 
+        {
+            //Lo stampiamo in cosnole
+            Debug.LogError(request.error); 
+        }
+        else
+        {
+            //downloadHandler gestisce la response del seerver
+            var text = request.downloadHandler.text;
+            vods = JsonConvert.DeserializeObject<Vods>(text); //converte il codice JSON in una classe FACT che abbiamo definito sopra
+            //stampa di prova da eliminiare
+            if(vods != null) 
+            {
+                //Debug.Log(vods.video[0].name);
+                videoPlayer.url = vods.video[0].urlCDN;
+                ChangeState(State.Preparing);
+            }
+        }
     }
 }
