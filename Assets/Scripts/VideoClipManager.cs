@@ -15,8 +15,8 @@ public class VideoClipManager : MonoBehaviour
     private State videoState = State.Init;
     private VideoPlayer videoPlayer;
     private int indiceArrayVideo = 0;
-    public enum ActionPlayer { None, PlayPause, Stop, NextClip, PrevClip, VolumeUp, VolumeDown, VolumeMute };
-    
+    public enum ActionPlayer { None, PlayPause, Stop, NextClip, PrevClip, VolumeUp, VolumeDown, VolumeMute, Behind, Advance};
+    public Image progressBar;
     private Vods vods;
     //stringa che conterra l'url di richiesta
     [SerializeField] 
@@ -68,17 +68,36 @@ public class VideoClipManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space)) //alla pressione del tasto spazio
         {
-            takeInput(ActionPlayer.NextClip);
+            takeInput(ActionPlayer.Advance);
         }
+        
+        if(progressBar != null)
+        {
+            if(videoPlayer.frameCount > 0)
+            {
+                progressBar.fillAmount = (float)videoPlayer.frame / (float) videoPlayer.frameCount;
+            }
+        }   
     }
 
 
     public void takeInput(ActionPlayer input) 
     {
+        if (input == ActionPlayer.Behind)
+        {
+            SkipVideo(-15.0f);
+        }
+
+        if (input == ActionPlayer.Advance)
+        {
+            SkipVideo(+15.0f);
+        }
+
         if (input == ActionPlayer.NextClip)
         {
             ChangeClip(1);
-        } 
+        }
+
         else if (input == ActionPlayer.PrevClip)
         {
             ChangeClip(-1);
@@ -178,5 +197,17 @@ public class VideoClipManager : MonoBehaviour
                 ChangeState(State.Preparing);
             }
         }
+    }
+
+    void SkipVideo(float value)
+    {
+        double newTime = videoPlayer.time + value;
+        if(newTime < 0)
+            newTime = 0f;
+        else if (newTime >= videoPlayer.length)
+        {
+            newTime = videoPlayer.length;
+        }        
+        videoPlayer.time = newTime;
     }
 }

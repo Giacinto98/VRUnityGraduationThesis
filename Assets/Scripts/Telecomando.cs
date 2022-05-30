@@ -11,7 +11,8 @@ public class Telecomando : MonoBehaviour
     public GameObject RHand;
     public GameObject LHand;
     private LineRenderer raggio;
-     void Start()
+     
+    void Start()
     {
         grabbable = GetComponent<OVRGrabbable>(); //prendo le componenti relative allo script OVRGrabbale
         raggio = GetComponentInChildren<LineRenderer>(); //prende le componenti del raggio rosso
@@ -20,11 +21,11 @@ public class Telecomando : MonoBehaviour
     // Update is called once per frame
     void Update()
     {   
-        if (grabbable) //se grabber non è null
+        if (grabbable) //se grabber non ï¿½ null
         {
-            if(raggio) //se il raggio non è null
+            if(raggio) //se il raggio non ï¿½ null
             {
-                raggio.enabled = grabbable.isGrabbed; //attivo il raggio solo se l'oggetto è preso
+                raggio.enabled = grabbable.isGrabbed; //attivo il raggio solo se l'oggetto ï¿½ preso
             }
             if (grabbable.isGrabbed) //se ho in mano il telecomando
             {
