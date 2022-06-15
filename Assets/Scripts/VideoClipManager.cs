@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
 using UnityEngine.Events;
-using Newtonsoft.Json;
 using UnityEngine.Networking;
 using TMPro;
+using Newtonsoft.Json;
 
 public class VideoClipManager : MonoBehaviour
 {
@@ -48,7 +48,9 @@ public class VideoClipManager : MonoBehaviour
             a.evento.AddListener(takeInput); //collego al comando l'evento che lancia metodo takeInput
         }
         videoPlayer = GetComponent<VideoPlayer>(); //prendo le componenti del videoPlayer
-        StartCoroutine(GetText());
+        //La coroutine serve a eseguire l'operazione su piu fotogrammi in modo tale da non bloccare l'0esecuzione di altre operazioni
+        StartCoroutine(GetText()); 
+        //Nel caso di una richiesta HTTP conviene avviare una coroutine 
     }
 
     void Update()
@@ -141,9 +143,6 @@ public class VideoClipManager : MonoBehaviour
     void ChangeClip(int direction)
     {
         indiceArrayVideo = (indiceArrayVideo + direction) % vods.video.Count;
-
-        
-
         if(indiceArrayVideo < 0)
         {
             indiceArrayVideo = vods.video.Count - 1;
@@ -172,6 +171,13 @@ public class VideoClipManager : MonoBehaviour
         videoState = stato;
     }
 
+    /*
+    Quando si itera attraverso una collezione o si accede a un file di grandi dimensioni, 
+    l'attesa dell'intera azione bloccherebbe tutte le altre, IEnumerator consente di 
+    interrompere il processo in un momento specifico, di restituire quella parte di oggetto 
+    (o nulla) e di ritornare a quel punto ogni volta che se ne ha bisogno.
+    */
+
     private IEnumerator GetText()
     {
         //richiesta HTTP con metodo get
@@ -192,7 +198,6 @@ public class VideoClipManager : MonoBehaviour
             //stampa di prova da eliminiare
             if(vods != null) 
             {
-                //Debug.Log(vods.video[0].name);
                 videoPlayer.url = vods.video[0].urlCDN;
                 ChangeState(State.Preparing);
             }
