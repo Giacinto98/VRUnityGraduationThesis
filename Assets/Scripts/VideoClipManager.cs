@@ -23,6 +23,11 @@ public class VideoClipManager : MonoBehaviour
     //stringa che conterra l'url di richiesta
     [SerializeField] 
     private string textURL;
+    private GameObject gameObjectPause;
+    private SpriteRenderer spriteRenderer;
+    public Sprite spritePlay;
+    private Sprite spritePause;
+
     //classe che conterra i dati della stringa JSON 
     [System.Serializable]
     public partial class Vods
@@ -49,6 +54,9 @@ public class VideoClipManager : MonoBehaviour
         {
             a.evento.AddListener(takeInput); //collego al comando l'evento che lancia metodo takeInput
         }
+        gameObjectPause = GameObject.FindGameObjectWithTag("TagPause");
+        spriteRenderer = gameObjectPause.GetComponent<SpriteRenderer>();
+        spritePause = spriteRenderer.sprite;
         videoPlayer = GetComponent<VideoPlayer>(); //prendo le componenti del videoPlayer
         //La coroutine serve a eseguire l'operazione su piu fotogrammi in modo tale da non bloccare l'0esecuzione di altre operazioni
         StartCoroutine(GetText()); 
@@ -104,12 +112,14 @@ public class VideoClipManager : MonoBehaviour
         {
             //debug.text = "Click tasto NextClip";
             ChangeClip(1);
+            spriteRenderer.sprite = spritePause;
         }
 
         else if (input == ActionPlayer.PrevClip)
         {
             //debug.text = "Click tasto PrevClip";
             ChangeClip(-1);
+            spriteRenderer.sprite = spritePause;
         }
 
         switch (videoState)
@@ -118,6 +128,7 @@ public class VideoClipManager : MonoBehaviour
                 if (input == ActionPlayer.PlayPause)
                 {
                     ChangeState(State.Play);
+                    spriteRenderer.sprite = spritePause;
                 }
                 break;
 
@@ -125,10 +136,12 @@ public class VideoClipManager : MonoBehaviour
                 if (input == ActionPlayer.PlayPause)
                 {
                     ChangeState(State.Pause);
+                    spriteRenderer.sprite = spritePlay;
                 }
                 else if (input == ActionPlayer.Stop)
                 {
                     ChangeState(State.Stop);
+                    spriteRenderer.sprite = spritePlay;
                 }
 
                 break;
@@ -137,6 +150,7 @@ public class VideoClipManager : MonoBehaviour
                 if (input == ActionPlayer.PlayPause)
                 {
                     ChangeState(State.Play);
+                    spriteRenderer.sprite = spritePause;
                 }
                 else if (input == ActionPlayer.Stop)
                 {
