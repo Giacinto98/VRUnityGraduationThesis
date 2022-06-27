@@ -18,6 +18,8 @@ public class VideoClipManager : MonoBehaviour
     public enum ActionPlayer { None, PlayPause, Stop, NextClip, PrevClip, VolumeUp, VolumeDown, VolumeMute, Behind, Advance};
     public Image progressBar;
     private Vods vods;
+    public Text debug;
+    bool isStopped = false;
     //stringa che conterra l'url di richiesta
     [SerializeField] 
     private string textURL;
@@ -51,6 +53,7 @@ public class VideoClipManager : MonoBehaviour
         //La coroutine serve a eseguire l'operazione su piu fotogrammi in modo tale da non bloccare l'0esecuzione di altre operazioni
         StartCoroutine(GetText()); 
         //Nel caso di una richiesta HTTP conviene avviare una coroutine 
+        //debug.text = "";
     }
 
     void Update()
@@ -87,21 +90,25 @@ public class VideoClipManager : MonoBehaviour
     {
         if (input == ActionPlayer.Behind)
         {
+            debug.text = "Click tasto Behind";
             SkipVideo(-15.0f);
         }
 
         if (input == ActionPlayer.Advance)
         {
+            //debug.text = "Click tasto Advance";
             SkipVideo(+15.0f);
         }
 
         if (input == ActionPlayer.NextClip)
         {
+            //debug.text = "Click tasto NextClip";
             ChangeClip(1);
         }
 
         else if (input == ActionPlayer.PrevClip)
         {
+            //debug.text = "Click tasto PrevClip";
             ChangeClip(-1);
         }
 
@@ -156,15 +163,30 @@ public class VideoClipManager : MonoBehaviour
         switch (stato)
         {
             case State.Play:
+                //debug.text = "Video in esecuzione";
                 videoPlayer.Play();
+                isStopped = false;
                 break;
             case State.Pause:
+                //debug.text = "Video in pausa";
                 videoPlayer.Pause();
+                isStopped = false;
                 break;
             case State.Stop:
+                if(isStopped)
+                {
+                    //debug.text = "Il video è già stoppato";
+                }
+                else
+                {
+                    //debug.text = "Video Stoppato";
+                    isStopped = true;
+                }
                 videoPlayer.Stop();
                 break;
             case State.Preparing:
+                //debug.text = "Video in preparazione, attendi qualche secondo...";
+                isStopped = false;
                 videoPlayer.Prepare();
                 break;
         }
@@ -177,7 +199,6 @@ public class VideoClipManager : MonoBehaviour
     interrompere il processo in un momento specifico, di restituire quella parte di oggetto 
     (o nulla) e di ritornare a quel punto ogni volta che se ne ha bisogno.
     */
-
     private IEnumerator GetText()
     {
         //richiesta HTTP con metodo get
@@ -187,6 +208,7 @@ public class VideoClipManager : MonoBehaviour
         //se si e verificato un errore nella richiesta HTTP 
         if (request.isHttpError || request.isNetworkError) 
         {
+            //debug.text = "Richiesta di un nuovo video effettuata";
             //Lo stampiamo in cosnole
             Debug.LogError(request.error); 
         }
@@ -199,6 +221,7 @@ public class VideoClipManager : MonoBehaviour
             if(vods != null) 
             {
                 videoPlayer.url = vods.video[0].urlCDN;
+                //debug.text = "Collegamento al video pronto";
                 ChangeState(State.Preparing);
             }
         }

@@ -11,6 +11,10 @@ public class Telecomando : MonoBehaviour
     public GameObject RHand;
     public GameObject LHand;
     private LineRenderer raggio;
+    public Text debug;
+    public LayerMask mask;
+    public float distance = 5f;
+    GameObject cast;
      
     void Start()
     {
@@ -20,20 +24,26 @@ public class Telecomando : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {   
+    { 
+   
         if (grabbable) //se grabber non � null
         {
             if(raggio) //se il raggio non � null
             {
                 raggio.enabled = grabbable.isGrabbed; //attivo il raggio solo se l'oggetto � preso
+                raggio.SetPosition(0, transform.position);
+                raggio.SetPosition(1, transform.position + transform.forward * distance);
             }
             if (grabbable.isGrabbed) //se ho in mano il telecomando
             {
                 ComandoPlayer comando = null;
                 RaycastHit hit;
-                if (Physics.Raycast(transform.position, transform.forward, out hit, 10f)) //se rileva una collisione entro 10 metri, mette le informazione sulla collisione in un Raycast Object
+                if (Physics.Raycast(transform.position, transform.forward, out hit, distance, mask)) //se rileva una collisione entro 10 metri, mette le informazione sulla collisione in un Raycast Object
                 {
-                   comando  = hit.collider.GetComponent<ComandoPlayer>();
+                    cast = hit.collider.gameObject;
+                    debug.text = cast.name;
+                    comando = hit.collider.GetComponent<ComandoPlayer>();
+                    raggio.SetPosition(1, hit.point);
                 }
 
                 OVRGrabber grabber = grabbable.grabbedBy; //componente che controlla le mani
