@@ -18,7 +18,6 @@ public class VideoClipManager : MonoBehaviour
     public enum ActionPlayer { None, PlayPause, Stop, NextClip, PrevClip, VolumeUp, VolumeDown, VolumeMute, Behind, Advance};
     public Image progressBar;
     private Vods vods;
-    public Text debug;
     bool isStopped = false;
     //stringa che conterra l'url di richiesta
     [SerializeField] 
@@ -90,7 +89,6 @@ public class VideoClipManager : MonoBehaviour
     {
         if (input == ActionPlayer.Behind)
         {
-            debug.text = "Click tasto Behind";
             SkipVideo(-15.0f);
         }
 

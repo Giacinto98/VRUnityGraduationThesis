@@ -11,7 +11,6 @@ public class Telecomando : MonoBehaviour
     public GameObject RHand;
     public GameObject LHand;
     private LineRenderer raggio;
-    public Text debug;
     public LayerMask mask;
     public float distance = 5f;
     private ComandoPlayer comando = null;
@@ -54,7 +53,6 @@ public class Telecomando : MonoBehaviour
                 if (Physics.Raycast(transform.position, transform.forward, out hit, distance, mask)) //se rileva una collisione entro 10 metri, mette le informazione sulla collisione in un Raycast Object
                 {
                     cast = hit.collider.gameObject;
-                    debug.text = cast.name;
                     /*
                     Creo una variabile ComandoPlayer a cui assegno l'elemento con cui ha colliso il raggio
                     Controllo quindi che sia diversa da comando, perchè se mi sto spostando sullo stesso comando
