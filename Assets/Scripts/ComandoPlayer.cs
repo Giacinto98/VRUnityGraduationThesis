@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class ComandoPlayer : MonoBehaviour
 {
     public VideoClipManager.ActionPlayer azionePlayer;
-    [HideInInspector]
     public UnityEvent<VideoClipManager.ActionPlayer> evento;
 
 
@@ -19,6 +19,11 @@ public class ComandoPlayer : MonoBehaviour
     {
         
     }
+
+    public void CambiaIcona(Image nuovaImmagine)
+    {
+            
+    } 
 
     public void Execute()
     {
