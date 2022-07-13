@@ -29,7 +29,7 @@ public class OVRGrabber : MonoBehaviour
     // easily observe broken physics simulation by, for example, moving the bottom cube of a stacked
     // tower and noting a complete loss of friction.
     [SerializeField]
-    protected bool m_parentHeldObject = false;
+    protected bool m_parentHeldObject = true;
 
 	// If true, this script will move the hand to the transform specified by m_parentTransform, using MovePosition in
 	// Update. This allows correct physics behavior, at the cost of some latency. In this usage scenario, you
@@ -275,9 +275,9 @@ public class OVRGrabber : MonoBehaviour
                 m_grabbedObjectPosOff = m_gripTransform.localPosition;
                 if(m_grabbedObj.snapOffset)
                 {
-                    Vector3 snapOffset = m_grabbedObj.snapOffset.position;
+                    Vector3 snapOffset = - m_grabbedObj.snapOffset.localPosition;
                     if (m_controller == OVRInput.Controller.LTouch) snapOffset.x = -snapOffset.x;
-                    m_grabbedObjectPosOff += snapOffset;
+                    m_grabbedObjectPosOff = snapOffset;
                 }
             }
             else
@@ -290,9 +290,13 @@ public class OVRGrabber : MonoBehaviour
             if (m_grabbedObj.snapOrientation)
             {
                 m_grabbedObjectRotOff = m_gripTransform.localRotation;
-                if(m_grabbedObj.snapOffset)
+                if (m_grabbedObj.snapOffset)
                 {
-                    m_grabbedObjectRotOff = m_grabbedObj.snapOffset.rotation * m_grabbedObjectRotOff;
+                    m_grabbedObjectRotOff = Quaternion.Inverse(m_grabbedObj.snapOffset.localRotation);
+                }
+                else
+                {
+                    m_grabbedObjectRotOff = Quaternion.identity;
                 }
             }
             else

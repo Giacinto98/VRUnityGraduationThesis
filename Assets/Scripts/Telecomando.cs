@@ -37,7 +37,7 @@ public class Telecomando : MonoBehaviour
             }
             if (grabbable.isGrabbed) //se ho in mano il telecomando
             {
-                transform.localRotation = Quaternion.identity; //la rotazione sarà impostata sui valori (0,0,0)
+                //transform.localRotation = Quaternion.identity; //la rotazione sarà impostata sui valori (0,0,0)
                 OVRGrabber grabber = grabbable.grabbedBy; //componente che controlla le mani
                 OVRInput.Controller grabController = OVRInput.Controller.None;
                

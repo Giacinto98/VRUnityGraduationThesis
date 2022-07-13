@@ -16582,7 +16582,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300398, guid: 065963b0293d8e3489f3ed20faeedc67, type: 3}
 --- !u!64 &517589535
@@ -18498,7 +18498,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300452, guid: 065963b0293d8e3489f3ed20faeedc67, type: 3}
 --- !u!64 &517589863
@@ -22042,6 +22042,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4057449844542698, guid: be9bb94f7525284458ebf0dd46a613c7, type: 3}
   m_PrefabInstance: {fileID: 1702085698}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1709661834
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1709661835}
+  m_Layer: 6
+  m_Name: AttachPivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1709661835
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1709661834}
+  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2721628065899687925}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
 --- !u!1 &1773944522
 GameObject:
   m_ObjectHideFlags: 0
@@ -23049,6 +23080,7 @@ Transform:
   m_Children:
   - {fileID: 443605231}
   - {fileID: 495042455}
+  - {fileID: 1709661835}
   m_Father: {fileID: 679063403}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -23084,9 +23116,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_allowOffhandGrab: 1
-  m_snapPosition: 0
-  m_snapOrientation: 0
-  m_snapOffset: {fileID: 0}
+  m_snapPosition: 1
+  m_snapOrientation: 1
+  m_snapOffset: {fileID: 1709661835}
   m_grabPoints: []
 --- !u!54 &8449030723375374555
 Rigidbody:
