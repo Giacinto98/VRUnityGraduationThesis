@@ -68,13 +68,7 @@ public class VideoClipManager : MonoBehaviour
                     ChangeState(State.Play);
                 }
                 break;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space)) //alla pressione del tasto spazio
-        {
-            takeInput(ActionPlayer.Advance);
-        }
-        
+        } 
         if(progressBar != null)
         {
             if(videoPlayer.frameCount > 0)
