@@ -1414,7 +1414,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   progressBar: {fileID: 271841241}
-  textURL: https://d3m91d6zzdccpw.cloudfront.net/metadata/vods.json
+  textURL: https://kinetv.s3.eu-west-2.amazonaws.com/metadata/vods_update.json
 --- !u!328 &382342858
 VideoPlayer:
   m_ObjectHideFlags: 0
@@ -2112,11 +2112,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 60e6ee464640d4e05b206626b04fa82e, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.0116
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 60e6ee464640d4e05b206626b04fa82e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 0.0645
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 60e6ee464640d4e05b206626b04fa82e, type: 3}
       propertyPath: m_LocalRotation.w
@@ -18850,7 +18850,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: ce816f2e6abb0504092c23ed9b970dfd, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.258
+      value: 0.777
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: ce816f2e6abb0504092c23ed9b970dfd, type: 3}
       propertyPath: m_LocalPosition.z
